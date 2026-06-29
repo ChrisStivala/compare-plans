@@ -1029,7 +1029,7 @@ function onResize(){
   S.vw=w;
   clearTimeout(_resizeTimer);
   _resizeTimer=setTimeout(()=>{
-    buildShell();cacheRefs();
+    buildShell();cacheRefs();bindShellEvents();
     updateCarousel();updateAddonFilters();
     requestAnimationFrame(()=>positionThumb(false));
     setTimeout(()=>positionThumb(false),250);
@@ -1046,7 +1046,9 @@ function updateAll(){
 }
 
 /* ── Event delegation ───────────────────────────────────────── */
-function bindEvents(){
+// Listeners bound to elements inside #root, which buildShell() recreates.
+// Must be re-bound after every rebuild (init + resize).
+function bindShellEvents(){
   // Fuel seg
   document.getElementById('fuel-seg')?.addEventListener('click',e=>{
     const b=e.target.closest('[data-fuel]');if(b) selectFuel(b.dataset.fuel);
@@ -1090,6 +1092,10 @@ function bindEvents(){
   document.getElementById('sclear-w')?.addEventListener('click',clearSearch);
   document.getElementById('sbtn-w')?.addEventListener('click',searchAction);
   document.getElementById('search-row-w')?.addEventListener('click',e=>{if(!e.target.closest('input')&&!e.target.closest('[id^=sclear]')&&!e.target.closest('[id^=scheck]')) searchAction();});
+}
+
+// Listeners on document/window, which persist across rebuilds. Bound once.
+function bindGlobalEvents(){
   // Suggestions
   document.addEventListener('click',e=>{
     const s=e.target.closest('[data-suggestion]');
@@ -1106,7 +1112,8 @@ function init(){
   cacheRefs();
   _curL=makeCursor('M26 15 L18 23 L26 31');
   _curR=makeCursor('M20 15 L28 23 L20 31');
-  bindEvents();
+  bindShellEvents();
+  bindGlobalEvents();
   updateAll();
   updateSearch();
 }
