@@ -170,10 +170,10 @@ function activePlans(){
 }
 
 /* ── Card HTML ──────────────────────────────────────────────── */
-function perkRow(pk){
+function perkRow(pk,rowH){
   const hasMod=!!pk.modal;
   const deco=hasMod?'text-decoration:underline dotted;text-decoration-color:rgba(0,0,0,.4);text-decoration-thickness:1.4px;text-underline-offset:auto;text-underline-position:from-font':'text-decoration:none';
-  return`<div${hasMod?` data-modal="${pk.modal}"`:''}style="display:flex;gap:12px;align-items:center;min-height:48px;cursor:${hasMod?'pointer':'default'}">
+  return`<div${hasMod?` data-modal="${pk.modal}"`:''}style="display:flex;gap:12px;align-items:center;min-height:${rowH||48}px;cursor:${hasMod?'pointer':'default'}">
   <div style="width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center"><cp-icon name="${pk.icon}" size="24"></cp-icon></div>
   <span style="font-weight:400;font-size:14px;line-height:24px;color:#505050;${deco}">${pk.text}</span>
 </div>`;
@@ -201,6 +201,13 @@ function cardHTML(plan,lo){
   const rRows=ratesOpen?'1fr':'0fr',gRRows=gasRatesOpen?'1fr':'0fr';
   const rVbar=`scaleY(${ratesOpen?0:1})`,gRVbar=`scaleY(${gasRatesOpen?0:1})`;
   const inclPlanName=plan.includedTitle.replace(/^What.s included with\s+/i,'');
+  // On narrow cards (mobile/tablet) the Go offer perk wraps to 3 lines, so every
+  // perk row reserves a uniform height per breakpoint to keep cards aligned.
+  const rowH=lo.isDesktop?48:72;
+  const addMin=rowH*2+14;
+  // Reserve a 2-line title height on narrow cards so a wrapping plan name
+  // (e.g. "Origin Everyday Rewards Variable") doesn't shift cards out of line.
+  const titleMinH=lo.isDesktop?0:62;
 
   let iconH='';
   if(plan.id==='edr') iconH=`<img src="project/assets/everyday-rewards.png" alt="Everyday Rewards" style="height:88px;width:106px;display:block">`;
@@ -268,21 +275,21 @@ function cardHTML(plan,lo){
     </div>
   </div>
   <div style="padding:0 12px;display:flex;flex-direction:column;gap:12px">
-    <div style="display:flex;align-items:center;gap:12px">
+    <div style="display:flex;align-items:center;gap:12px;min-height:${titleMinH}px">
       <div style="display:flex;flex-direction:column;gap:2px">
         <span style="font-weight:500;font-size:14px;line-height:20px;color:#232323">What's included with</span>
         <span style="font-weight:500;font-size:14px;line-height:20px;color:#232323">${inclPlanName}</span>
       </div>
       <div style="flex:1 1 16px;min-width:12px;height:1px;background:#D8D8D8"></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:14px">${included.map(perkRow).join('')}</div>
+    <div style="display:flex;flex-direction:column;gap:14px">${included.map(p=>perkRow(p,rowH)).join('')}</div>
   </div>
   ${showAddons&&plan.addable&&plan.addable.length?`<div style="padding:0 12px;display:flex;flex-direction:column;gap:16px">
     <div style="display:flex;align-items:center;gap:12px">
       <span style="font-weight:500;font-size:14px;line-height:20px;color:#232323;white-space:nowrap">Things you can add</span>
       <div style="flex:1 1 16px;min-width:12px;height:1px;background:#D8D8D8"></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:14px;min-height:110px">${plan.addable.map(perkRow).join('')}</div>
+    <div style="display:flex;flex-direction:column;gap:14px;min-height:${addMin}px">${plan.addable.map(p=>perkRow(p,rowH)).join('')}</div>
   </div>`:''}
 </div>
 <div style="padding:0 16px">
