@@ -175,7 +175,7 @@ function perkRow(pk,rowH){
   const deco=hasMod?'text-decoration:underline dotted;text-decoration-color:rgba(0,0,0,.4);text-decoration-thickness:1.4px;text-underline-offset:auto;text-underline-position:from-font':'text-decoration:none';
   return`<div${hasMod?` data-modal="${pk.modal}"`:''}style="display:flex;gap:12px;align-items:center;min-height:${rowH||48}px;cursor:${hasMod?'pointer':'default'}">
   <div style="width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center"><cp-icon name="${pk.icon}" size="24"></cp-icon></div>
-  <span style="font-weight:400;font-size:14px;line-height:24px;color:#505050;${deco}">${pk.text}</span>
+  <span style="font-weight:400;font-size:14px;line-height:28px;color:#505050;${deco}">${pk.text}</span>
 </div>`;
 }
 
