@@ -200,7 +200,7 @@ function cardHTML(plan,lo){
   const gOp=showGas?'1':'0';
   const rRows=ratesOpen?'1fr':'0fr',gRRows=gasRatesOpen?'1fr':'0fr';
   const rVbar=`scaleY(${ratesOpen?0:1})`,gRVbar=`scaleY(${gasRatesOpen?0:1})`;
-  const inclPlanName=plan.includedTitle.replace(/^What.s included with\s+/i,'');
+  const inclPlanName=plan.includedTitle.replace(/^What.s included with\s+/i,'').replace(/\.\s*$/,'');
   // On narrow cards (mobile/tablet) the Go offer perk wraps to 3 lines, so every
   // perk row reserves a uniform height per breakpoint to keep cards aligned.
   // Tablet cards are narrowest (≈262px at 768px), where the Go offer still
